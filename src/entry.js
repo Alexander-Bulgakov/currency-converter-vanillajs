@@ -57,9 +57,38 @@ window.route = route;
 handleLocation();
 
 /**
+ * fetching data
+ */
+
+const rates = {};
+
+const label = document.querySelector("#sell-currency-label");
+const sellHiddenInput = document.querySelector("#sell-hidden-input");
+const buyHiddenInput = document.querySelector("#buy-hidden-input");
+
+async function getCurrencies() {
+  const responce = await fetch("https://www.cbr-xml-daily.ru/daily_json.js")
+  const json = await responce.json();
+  rates.USD = json.Valute.USD.Value;
+  rates.EUR = json.Valute.EUR.Value;
+  rates.GBP = json.Valute.GBP.Value;
+  rates.JPY = json.Valute.JPY.Value;
+  console.log("json > ", json);
+  console.log("rates > ", rates);
+  label.textContent = `1 ${sellHiddenInput.value} = ${(1 / rates.USD).toFixed(4)} ${buyHiddenInput.value}`
+}
+getCurrencies();
+
+/**
+ * input label text
+ */
+
+
+/**
  * input event listeners
  */
 
+// Разрешаем вводить в инпут только цифры
 const currencyAmountInput = document.querySelector(".currency__input");
   
 currencyAmountInput.addEventListener("input", function(event) {
@@ -71,45 +100,72 @@ currencyAmountInput.addEventListener("input", function(event) {
  * Dropdown event listeners
  */
 
-const dropdownContent = document.querySelector(".dropdown__content");
+const dropdownContents = document.querySelectorAll(".dropdown__content");
 const currentBtn = document.querySelector(".dropdown__button");
-const currentItems = document.querySelectorAll(".dropdown__item");
-const input = document.querySelector(".dropdown__input");
-const arrow = document.querySelector(".arrow");
+const cardInputs = document.querySelectorAll(".currency__input");
+const dropDownBts = document.querySelectorAll(".dropdown__button");
+let arrows = document.querySelectorAll(".arrow");
 
-// Клик по дропдауну. Открыть/закрыть селект
-currentBtn.addEventListener("click", function(event) {
-  event.stopPropagation();
-  arrow.classList.toggle("arrow-up");
-  dropdownContent.classList.toggle("dropdown__content_active");
-  currentBtn.classList.add("button-active");
-})
 
-// Выбор элемента списка. Запомнить выбранное значение, закрыть селект
-currentItems.forEach( item => {
-  item.addEventListener("click", function(event) {
-    event.stopPropagation();
-    arrow.classList.remove("arrow-up");
-    currentBtn.querySelector(".dropdown__country").innerHTML = this.innerHTML;
-    dropdownContent.classList.remove("dropdown__content_active");
-    input.value = this.querySelector(".dropdown__currency").dataset.currency;
+// [...cardInputs].forEach(item => {
+//   item.addEventListener("input", function() {
+//     console.log("this > ", this);
+//     item.classList.add("calc-value");
+//   })
+// });
+
+// Клик по дропдауну, раскрыть/закрыть список, развернуть стрелку
+[...dropDownBts].forEach(item => {
+  item.addEventListener("click", function() {
+    const arrow = this.querySelector(".arrow");
+    arrow.classList.toggle("arrow-up");
+    const dropDownContent = this.closest(".dropdown").querySelector(".dropdown__content");
+    dropDownContent.classList.toggle("dropdown__content_active");
   })
-})
+});
 
-// Клик снаружи дропдауна. Закрыть дропдаун
+// Выбор элемента списка. Переложить выбранное значение в скрытый инпут, закрыть селект
+const dropDownItems = document.querySelectorAll(".dropdown__item");
+[...dropDownItems].forEach(item => {
+  item.addEventListener("click", function() {
+    const dropDown = this.closest(".dropdown");
+    const hidenInput = dropDown.querySelector(".dropdown__input");
+    dropDown.querySelector(".dropdown__country").innerHTML = this.innerHTML;
+    dropdownContents.forEach( item => {
+      item.classList.remove("dropdown__content_active");
+    });
+    hidenInput.value = this.querySelector(".dropdown__currency").dataset.currency;
+
+    console.log("hidenInput.value > ", hidenInput.value);
+  })
+});
+
+// Клик снаружи дропдауна. Закрыть дропдаун, перевернуть стрелку
 document.addEventListener("click", (event) => {
-  if (event.target !== dropdownContent && event.target !== currentBtn) {
-    arrow.classList.remove("arrow-up");
-    dropdownContent.classList.remove("dropdown__content_active");
-    currentBtn.classList.remove("button-active");
+  if (!event.target.closest(".dropdown")) {
+    [...arrows].forEach(arrow => {
+      arrow.classList.remove("arrow-up");
+      document.querySelectorAll(".dropdown").forEach(item => {
+        item.querySelector(".dropdown__content").classList.remove("dropdown__content_active");
+      });
+    })
   }
-})
+});
 
 // Нажатие на Tab или Escape. Закрыть дропдаун
 document.addEventListener("keydown", (event) => {
   if (event.key === "Tab" || event.key === "Escape") {
-    arrow.classList.remove("arrow-up");
-    dropdownContent.classList.remove("dropdown__content_active");
+    let arrows = document.querySelectorAll(".arrow");
+    [...arrows].forEach(element => {
+      // console.log(element);
+      element.classList.remove("arrow-up");
+      document.querySelectorAll(".dropdown").forEach(item => {
+        item.querySelector(".dropdown__content").classList.remove("dropdown__content_active");
+      });
+    });
+    dropdownContents.forEach(item => {
+      item.classList.remove("dropdown__content_active");
+    })
     currentBtn.classList.remove("button-active");
   }
-})
+});

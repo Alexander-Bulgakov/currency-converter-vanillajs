@@ -5,9 +5,9 @@
       <h3 class="card-header">У меня есть</h3>
       <div class="currency">
         <input class="currency__input" type="text" name="current" required >
-        <label class="currency__label" for="current">1 RUB = 0.013 USD</label>
+        <label id="sell-currency-label" class="currency__label" for="current">1 RUB = 0.013 USD</label>
       </div>
-      <div class="dropdown">
+      <div id="sell-currency" class="dropdown">
         <div class="dropdown__button">
           <div class="dropdown__country">
             <img src="../images/flags/russia.png" alt="" class="flag">
@@ -37,7 +37,7 @@
             <div class="dropdown__currency" data-currency="JPY">Японская иена</div>
           </div>
         </div>
-        <input type="text" class="dropdown__input" value="RUB">
+        <input id="sell-hidden-input" type="text" class="dropdown__input" value="RUB">
       </div>
     </div>
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="Converter_button__dd8bX SwapButton_button__vl_3z">
@@ -52,6 +52,38 @@
       <div class="currency">
         <input class="currency__input" type="text" name="current" required>
         <label class="currency__label" for="current">1 RUB = 0.013 USD</label>
+      </div>
+      <div id="buy-currency" class="dropdown">
+        <div class="dropdown__button">
+          <div class="dropdown__country">
+            <img src="../images/flags/united-states.png" alt="" class="flag">
+            <div class="dropdown__currency" data-currency="USD">Доллар США</div>
+          </div>
+          <img class="arrow" src="../images/arrow-down.png" alt="">
+        </div>
+        <div class="dropdown__content">
+          <div class="dropdown__item">
+            <img src="../images/flags/russia.png" alt="" class="flag">
+            <div class="dropdown__currency" data-currency="RUB">Российский рубль</div>
+          </div>
+          <div class="dropdown__item">
+            <img src="../images/flags/united-states.png" alt="" class="flag">
+            <div class="dropdown__currency" data-currency="USD">Доллар США</div>
+          </div>
+          <div class="dropdown__item">
+            <img src="../images/flags/european-union.png" alt="" class="flag">
+            <div class="dropdown__currency" data-currency="EUR">Евро</div>
+          </div>
+          <div class="dropdown__item">
+            <img src="../images/flags/united-kingdom.png" alt="" class="flag">
+            <div class="dropdown__currency" data-currency="GBP">Фунт стерлингов</div>
+          </div>
+          <div class="dropdown__item">
+            <img src="../images/flags/japan.png" alt="" class="flag">
+            <div class="dropdown__currency" data-currency="JPY">Японская иена</div>
+          </div>
+        </div>
+        <input id="buy-hidden-input" type="text" class="dropdown__input" value="USD">
       </div>
     </div>
   </div>
