@@ -1,11 +1,11 @@
 <div class="converter-container">
   <h1>Обмен валюты</h1>
   <div class="cards-container">
-    <div class="card">
+    <div id="sell-card" class="card">
       <h3 class="card-header">У меня есть</h3>
       <div class="currency">
         <input class="currency__input" type="text" name="current" required >
-        <label id="sell-currency-label" class="currency__label" for="current">1 RUB = 0.013 USD</label>
+        <label id="sell-currency-label" class="currency__label" for="current"></label>
       </div>
       <div id="sell-currency" class="dropdown">
         <div class="dropdown__button">
@@ -47,11 +47,11 @@
       <path d="M11.897 17.207L9 20.103L11.897 23" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
       <path d="M23 20.1H9" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
     </svg>
-    <div class="card">
+    <div id="buy-card" class="card">
       <h3 class="card-header">Хочу купить</h3>
       <div class="currency">
         <input class="currency__input" type="text" name="current" required>
-        <label class="currency__label" for="current">1 RUB = 0.013 USD</label>
+        <label id="buy-currency-label" class="currency__label" for="current"></label>
       </div>
       <div id="buy-currency" class="dropdown">
         <div class="dropdown__button">

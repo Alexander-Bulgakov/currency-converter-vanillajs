@@ -56,15 +56,42 @@ window.route = route;
 
 handleLocation();
 
+let sellCurrency = "RUB";
+let buyCurrency = "USD";
+
 /**
  * fetching data
  */
 
 const rates = {};
 
-const label = document.querySelector("#sell-currency-label");
+const sellLabel = document.querySelector("#sell-currency-label");
+const buyLabel = document.querySelector("#buy-currency-label");
 const sellHiddenInput = document.querySelector("#sell-hidden-input");
 const buyHiddenInput = document.querySelector("#buy-hidden-input");
+
+const setLabelContent = () => {
+
+  // пары валют без рубля
+  if (sellCurrency !== "RUB" && buyCurrency !== "RUB") {
+    // let ratio = 100;
+    let ratio = ( rates[sellCurrency] / rates[buyCurrency] );
+    let reverseRatio = (1 / ratio);
+    sellLabel.textContent = `1 ${sellCurrency} = ${ratio.toFixed(4)} ${buyCurrency}`;
+    buyLabel.textContent = `1 ${buyCurrency} = ${reverseRatio.toFixed(4)} ${sellCurrency}`;
+  } else {
+    // покупка рубля
+    if (buyCurrency === "RUB") {
+      let ratio = (1 / rates[sellCurrency]);
+      let reverseRatio = (1 / ratio);
+      sellLabel.textContent = `1 ${sellCurrency} = ${ratio.toFixed(4)} ${buyCurrency}`;
+      buyLabel.textContent = `1 ${buyCurrency} = ${reverseRatio.toFixed(4)} ${sellCurrency}`;
+    } else {
+      sellLabel.textContent = `1 ${sellCurrency} = ${(1 / rates[buyCurrency]).toFixed(4)} ${buyCurrency}`;
+      buyLabel.textContent = `1 ${buyCurrency} = ${(rates[buyCurrency]).toFixed(4)} ${sellCurrency}`;
+    }
+  }
+}
 
 async function getCurrencies() {
   const responce = await fetch("https://www.cbr-xml-daily.ru/daily_json.js")
@@ -75,7 +102,8 @@ async function getCurrencies() {
   rates.JPY = json.Valute.JPY.Value;
   console.log("json > ", json);
   console.log("rates > ", rates);
-  label.textContent = `1 ${sellHiddenInput.value} = ${(1 / rates.USD).toFixed(4)} ${buyHiddenInput.value}`
+  setLabelContent();
+  // sellLabel.textContent = `1 ${sellCurrency} = ${(1 / rates[buyCurrency]).toFixed(4)} ${buyCurrency}`
 }
 getCurrencies();
 
@@ -129,14 +157,24 @@ const dropDownItems = document.querySelectorAll(".dropdown__item");
 [...dropDownItems].forEach(item => {
   item.addEventListener("click", function() {
     const dropDown = this.closest(".dropdown");
-    const hidenInput = dropDown.querySelector(".dropdown__input");
+    // const hiddenInput = dropDown.querySelector(".dropdown__input");
     dropDown.querySelector(".dropdown__country").innerHTML = this.innerHTML;
     dropdownContents.forEach( item => {
       item.classList.remove("dropdown__content_active");
     });
-    hidenInput.value = this.querySelector(".dropdown__currency").dataset.currency;
+    const arrow = dropDown.querySelector(".arrow");
+    arrow.classList.toggle("arrow-up");
+    // hiddenInput.value = this.querySelector(".dropdown__currency").dataset.currency;
+    // console.log("hiddenInput.value > ", hiddenInput.value);
 
-    console.log("hidenInput.value > ", hidenInput.value);
+    // изменить валюты покупки и продажи
+    if (dropDown.closest("#sell-card")) {
+      sellCurrency = this.querySelector(".dropdown__currency").dataset.currency;
+    } else {
+      buyCurrency = this.querySelector(".dropdown__currency").dataset.currency;
+    }
+    console.log("dataset.currency > ", this.querySelector(".dropdown__currency").dataset.currency);
+    setLabelContent();
   })
 });
 
@@ -169,3 +207,11 @@ document.addEventListener("keydown", (event) => {
     currentBtn.classList.remove("button-active");
   }
 });
+
+/**
+ * hidden input listeners
+ */
+
+sellHiddenInput.addEventListener("change", () => {
+  console.log("hidden");
+})
