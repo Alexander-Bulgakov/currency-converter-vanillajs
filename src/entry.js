@@ -72,23 +72,31 @@ const buyHiddenInput = document.querySelector("#buy-hidden-input");
 
 const setLabelContent = () => {
 
-  // пары валют без рубля
-  if (sellCurrency !== "RUB" && buyCurrency !== "RUB") {
-    // let ratio = 100;
-    let ratio = ( rates[sellCurrency] / rates[buyCurrency] );
-    let reverseRatio = (1 / ratio);
+  const composeLabelText = (ratio) => {
+    const reverseRatio = 1 / ratio;
+    console.log(ratio, reverseRatio);
+    // debugger;
     sellLabel.textContent = `1 ${sellCurrency} = ${ratio.toFixed(4)} ${buyCurrency}`;
     buyLabel.textContent = `1 ${buyCurrency} = ${reverseRatio.toFixed(4)} ${sellCurrency}`;
+  }
+
+  // пары валют без рубля
+  if (sellCurrency !== "RUB" && buyCurrency !== "RUB") {
+    let ratio = rates[sellCurrency] / rates[buyCurrency];
+    composeLabelText(ratio);
   } else {
-    // покупка рубля
+    // покупка рубля за любую валюту
     if (buyCurrency === "RUB") {
-      let ratio = (1 / rates[sellCurrency]);
-      let reverseRatio = (1 / ratio);
-      sellLabel.textContent = `1 ${sellCurrency} = ${ratio.toFixed(4)} ${buyCurrency}`;
-      buyLabel.textContent = `1 ${buyCurrency} = ${reverseRatio.toFixed(4)} ${sellCurrency}`;
-    } else {
-      sellLabel.textContent = `1 ${sellCurrency} = ${(1 / rates[buyCurrency]).toFixed(4)} ${buyCurrency}`;
-      buyLabel.textContent = `1 ${buyCurrency} = ${(rates[buyCurrency]).toFixed(4)} ${sellCurrency}`;
+      if (sellCurrency === buyCurrency) {
+        composeLabelText(1);
+      } else {
+        let ratio = 1 / rates[sellCurrency];
+        composeLabelText(ratio);
+      }
+    } else if (sellCurrency === "RUB" && buyCurrency !== "RUB") {
+      // покупка любой валюты за рубль
+      let ratio = 1 / rates[buyCurrency];
+      composeLabelText(ratio);
     }
   }
 }
@@ -103,7 +111,6 @@ async function getCurrencies() {
   console.log("json > ", json);
   console.log("rates > ", rates);
   setLabelContent();
-  // sellLabel.textContent = `1 ${sellCurrency} = ${(1 / rates[buyCurrency]).toFixed(4)} ${buyCurrency}`
 }
 getCurrencies();
 
@@ -195,7 +202,6 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Tab" || event.key === "Escape") {
     let arrows = document.querySelectorAll(".arrow");
     [...arrows].forEach(element => {
-      // console.log(element);
       element.classList.remove("arrow-up");
       document.querySelectorAll(".dropdown").forEach(item => {
         item.querySelector(".dropdown__content").classList.remove("dropdown__content_active");
@@ -207,11 +213,3 @@ document.addEventListener("keydown", (event) => {
     currentBtn.classList.remove("button-active");
   }
 });
-
-/**
- * hidden input listeners
- */
-
-sellHiddenInput.addEventListener("change", () => {
-  console.log("hidden");
-})
