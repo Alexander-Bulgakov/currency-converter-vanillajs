@@ -141,14 +141,6 @@ const cardInputs = document.querySelectorAll(".currency__input");
 const dropDownBts = document.querySelectorAll(".dropdown__button");
 let arrows = document.querySelectorAll(".arrow");
 
-
-// [...cardInputs].forEach(item => {
-//   item.addEventListener("input", function() {
-//     console.log("this > ", this);
-//     item.classList.add("calc-value");
-//   })
-// });
-
 // Клик по дропдауну, раскрыть/закрыть список, развернуть стрелку
 [...dropDownBts].forEach(item => {
   item.addEventListener("click", function() {
@@ -159,31 +151,54 @@ let arrows = document.querySelectorAll(".arrow");
   })
 });
 
-// Выбор элемента списка. Переложить выбранное значение в скрытый инпут, закрыть селект
 const dropDownItems = document.querySelectorAll(".dropdown__item");
+
+//деактивировать item, выбранный к конвертации
+const sellItems = [...dropDownItems].filter(item => item.closest("#sell-card"));
+console.log("sellItems > ", sellItems);
+const buyItems = [...dropDownItems].filter(item => item.closest("#buy-card"));
+console.log("buyItems > ", buyItems);
+
+const setInactiveItems = () => {
+  sellItems.forEach( item => {
+    item.classList.remove("inactive-item");
+    if (item.querySelector(".dropdown__currency").dataset.currency === buyCurrency) {
+      item.classList.add("inactive-item");
+      console.log("inactive sell", item);
+    }  
+  })  
+  buyItems.forEach( item => {
+    item.classList.remove("inactive-item");
+    if (item.querySelector(".dropdown__currency").dataset.currency === sellCurrency) {
+      item.classList.add("inactive-item");
+      console.log("inactive buy", item);
+    }  
+  })  
+}  
+
+setInactiveItems();
+
+// Выбор элемента списка. Переложить выбранное значение в скрытый инпут, закрыть селект
 [...dropDownItems].forEach(item => {
   item.addEventListener("click", function() {
     const dropDown = this.closest(".dropdown");
-    // const hiddenInput = dropDown.querySelector(".dropdown__input");
     dropDown.querySelector(".dropdown__country").innerHTML = this.innerHTML;
     dropdownContents.forEach( item => {
       item.classList.remove("dropdown__content_active");
-    });
+    });  
     const arrow = dropDown.querySelector(".arrow");
     arrow.classList.toggle("arrow-up");
-    // hiddenInput.value = this.querySelector(".dropdown__currency").dataset.currency;
-    // console.log("hiddenInput.value > ", hiddenInput.value);
-
+    
     // изменить валюты покупки и продажи
     if (dropDown.closest("#sell-card")) {
       sellCurrency = this.querySelector(".dropdown__currency").dataset.currency;
     } else {
       buyCurrency = this.querySelector(".dropdown__currency").dataset.currency;
-    }
-    console.log("dataset.currency > ", this.querySelector(".dropdown__currency").dataset.currency);
+    }  
     setLabelContent();
-  })
-});
+    setInactiveItems();
+  })  
+});  
 
 // Клик снаружи дропдауна. Закрыть дропдаун, перевернуть стрелку
 document.addEventListener("click", (event) => {

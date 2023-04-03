@@ -157,3 +157,8 @@ h1 {
 .dropdown__input {
   display: none;
 }
+
+.inactive-item {
+  pointer-events: none;
+  opacity: 0.5;
+}
