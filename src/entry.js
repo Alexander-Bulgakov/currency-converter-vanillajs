@@ -117,11 +117,13 @@ getCurrencies();
  */
 
 // Разрешаем вводить в инпут только цифры
-const currencyAmountInput = document.querySelector(".currency__input");
+const currencyAmountInputs = document.querySelectorAll(".currency__input");
   
-currencyAmountInput.addEventListener("input", function(event) {
-  const reg = /[0-9]/g;
-  this.value = ( reg.test(event.data) ) ? this.value : this.value.slice(0,-1);
+[...currencyAmountInputs].forEach(input => {
+  input.addEventListener("input", function(event) {
+    const reg = /[0-9]/g;
+    this.value = ( reg.test(event.data) ) ? this.value : this.value.slice(0,-1);
+  });
 });
 
 /**
