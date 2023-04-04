@@ -1,5 +1,5 @@
 import converter from "./pages/converter.html";
-import ratio from "./pages/ratio.html";
+import ratioPage from "./pages/ratio.html";
 import notFound from "./pages/404.html";
 import styles from "./styles/index.scss";
 import image from "./images/cat.png";
@@ -38,7 +38,7 @@ const route = (event) => {
 const routes = {
   "/": converter,
   "/converter": converter,
-  "/ratio": ratio,
+  "/ratio": ratioPage,
   404: notFound,
 };
 
@@ -70,37 +70,6 @@ const buyLabel = document.querySelector("#buy-currency-label");
 const sellHiddenInput = document.querySelector("#sell-hidden-input");
 const buyHiddenInput = document.querySelector("#buy-hidden-input");
 
-const setLabelContent = () => {
-
-  const composeLabelText = (ratio) => {
-    const reverseRatio = 1 / ratio;
-    console.log(ratio, reverseRatio);
-    // debugger;
-    sellLabel.textContent = `1 ${sellCurrency} = ${ratio.toFixed(4)} ${buyCurrency}`;
-    buyLabel.textContent = `1 ${buyCurrency} = ${reverseRatio.toFixed(4)} ${sellCurrency}`;
-  }
-
-  // пары валют без рубля
-  if (sellCurrency !== "RUB" && buyCurrency !== "RUB") {
-    let ratio = rates[sellCurrency] / rates[buyCurrency];
-    composeLabelText(ratio);
-  } else {
-    // покупка рубля за любую валюту
-    if (buyCurrency === "RUB") {
-      if (sellCurrency === buyCurrency) {
-        composeLabelText(1);
-      } else {
-        let ratio = 1 / rates[sellCurrency];
-        composeLabelText(ratio);
-      }
-    } else if (sellCurrency === "RUB" && buyCurrency !== "RUB") {
-      // покупка любой валюты за рубль
-      let ratio = 1 / rates[buyCurrency];
-      composeLabelText(ratio);
-    }
-  }
-}
-
 async function getCurrencies() {
   const responce = await fetch("https://www.cbr-xml-daily.ru/daily_json.js")
   const json = await responce.json();
@@ -111,6 +80,40 @@ async function getCurrencies() {
   setLabelContent();
 }
 getCurrencies();
+
+// Рассчитать и вывести в интерфейс курсы валют
+
+let ratio, reverseRatio;
+
+const setLabelContent = () => {
+
+  const composeLabelText = (ratio) => {
+    reverseRatio = 1 / ratio;
+    console.log(ratio, reverseRatio);
+    sellLabel.textContent = `1 ${sellCurrency} = ${ratio.toFixed(4)} ${buyCurrency}`;
+    buyLabel.textContent = `1 ${buyCurrency} = ${reverseRatio.toFixed(4)} ${sellCurrency}`;
+  }
+
+  // пары валют без рубля
+  if (sellCurrency !== "RUB" && buyCurrency !== "RUB") {
+    ratio = rates[sellCurrency] / rates[buyCurrency];
+    composeLabelText(ratio);
+  } else {
+    // покупка рубля за любую валюту
+    if (buyCurrency === "RUB") {
+      if (sellCurrency === buyCurrency) {
+        composeLabelText(1);
+      } else {
+        ratio = 1 / rates[sellCurrency];
+        composeLabelText(ratio);
+      }
+    } else if (sellCurrency === "RUB" && buyCurrency !== "RUB") {
+      // покупка любой валюты за рубль
+      ratio = 1 / rates[buyCurrency];
+      composeLabelText(ratio);
+    }
+  }
+}
 
 /**
  * input event listeners
