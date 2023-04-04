@@ -121,11 +121,16 @@ const setLabelContent = () => {
 
 // Разрешаем вводить в инпут только цифры
 const currencyAmountInputs = document.querySelectorAll(".currency__input");
-  
-[...currencyAmountInputs].forEach(input => {
+const inputs = Array.from(currencyAmountInputs);
+inputs.forEach((input, index) => {
   input.addEventListener("input", function(event) {
     const reg = /[0-9]/g;
     this.value = ( reg.test(event.data) ) ? this.value : this.value.slice(0,-1);
+    if (index === 0) {
+      inputs[1].value = (this.value) ? (this.value * ratio).toFixed(4) : "";
+    } else {
+      inputs[0].value = (this.value) ? (this.value * reverseRatio).toFixed(4) : "";
+    }
   });
 });
 
