@@ -127,9 +127,9 @@ inputs.forEach((input, index) => {
     const reg = /[0-9]/g;
     this.value = ( reg.test(event.data) ) ? this.value : this.value.slice(0,-1);
     if (index === 0) {
-      inputs[1].value = (this.value) ? (this.value * ratio).toFixed(4) : "";
+      inputs[1].value = (this.value) ? (this.value * ratio).toFixed(2) : "";
     } else {
-      inputs[0].value = (this.value) ? (this.value * reverseRatio).toFixed(4) : "";
+      inputs[0].value = (this.value) ? (this.value * reverseRatio).toFixed(2) : "";
     }
   });
 });
@@ -205,6 +205,9 @@ setInactiveItems();
     }  
     setLabelContent();
     setInactiveItems(true);
+
+    // очистить инпуты
+    inputs.forEach(input => input.value = "");
   })  
 });  
 
