@@ -108,16 +108,9 @@ async function getCurrencies() {
   rates.EUR = json.Valute.EUR.Value;
   rates.GBP = json.Valute.GBP.Value;
   rates.JPY = json.Valute.JPY.Value;
-  console.log("json > ", json);
-  console.log("rates > ", rates);
   setLabelContent();
 }
 getCurrencies();
-
-/**
- * input label text
- */
-
 
 /**
  * input event listeners
@@ -151,31 +144,36 @@ let arrows = document.querySelectorAll(".arrow");
   })
 });
 
+/**
+ * dropdown items event listeners
+ */
+
 const dropDownItems = document.querySelectorAll(".dropdown__item");
 
-//деактивировать item, выбранный к конвертации
 const sellItems = [...dropDownItems].filter(item => item.closest("#sell-card"));
-console.log("sellItems > ", sellItems);
 const buyItems = [...dropDownItems].filter(item => item.closest("#buy-card"));
-console.log("buyItems > ", buyItems);
 
-const setInactiveItems = () => {
-  sellItems.forEach( item => {
-    item.classList.remove("inactive-item");
-    if (item.querySelector(".dropdown__currency").dataset.currency === buyCurrency) {
-      item.classList.add("inactive-item");
-      console.log("inactive sell", item);
-    }  
-  })  
-  buyItems.forEach( item => {
-    item.classList.remove("inactive-item");
-    if (item.querySelector(".dropdown__currency").dataset.currency === sellCurrency) {
-      item.classList.add("inactive-item");
-      console.log("inactive buy", item);
-    }  
-  })  
-}  
+const inactiveItems = {
+  sellItem: null,
+  buyItem: null,
+}
 
+const setInactiveItems = (itemsChanges = false) => {
+  if (itemsChanges) {
+    inactiveItems.sellItem.classList.remove("inactive-item");
+    inactiveItems.buyItem.classList.remove("inactive-item");
+  }
+
+  inactiveItems.sellItem = sellItems.find(item => {
+    return item.querySelector(".dropdown__currency").dataset.currency === buyCurrency;
+  });
+  inactiveItems.buyItem  = buyItems.find(item => {
+    return item.querySelector(".dropdown__currency").dataset.currency === sellCurrency;
+  });
+
+  inactiveItems.sellItem.classList.add("inactive-item");
+  inactiveItems.buyItem.classList.add("inactive-item");
+}
 setInactiveItems();
 
 // Выбор элемента списка. Переложить выбранное значение в скрытый инпут, закрыть селект
@@ -196,9 +194,13 @@ setInactiveItems();
       buyCurrency = this.querySelector(".dropdown__currency").dataset.currency;
     }  
     setLabelContent();
-    setInactiveItems();
+    setInactiveItems(true);
   })  
 });  
+
+/**
+ * document event listeners
+ */
 
 // Клик снаружи дропдауна. Закрыть дропдаун, перевернуть стрелку
 document.addEventListener("click", (event) => {
@@ -212,7 +214,7 @@ document.addEventListener("click", (event) => {
   }
 });
 
-// Нажатие на Tab или Escape. Закрыть дропдаун
+// Нажатие на Tab или Escape. Закрыть дропдаун, перевернуть стрелку
 document.addEventListener("keydown", (event) => {
   if (event.key === "Tab" || event.key === "Escape") {
     let arrows = document.querySelectorAll(".arrow");
