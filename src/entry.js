@@ -209,7 +209,27 @@ setInactiveItems();
     // очистить инпуты
     inputs.forEach(input => input.value = "");
   })  
-});  
+});
+
+/**
+ * reverse currencies
+ */
+
+document.querySelector(".reverse").addEventListener("click", function(){
+  [sellCurrency, buyCurrency] = [buyCurrency, sellCurrency];
+  setLabelContent();
+  let sellCard = document.querySelector("#sell-card");
+  let buyCard = document.querySelector("#buy-card");
+  let sellCountry = sellCard.querySelector(".dropdown__country");
+  let sellItem = sellItems.find(item => item.querySelector(".dropdown__currency").dataset.currency === sellCurrency);
+  sellCountry.innerHTML = sellItem.innerHTML;
+  let buyCountry = buyCard.querySelector(".dropdown__country");
+  let buyItem = buyItems.find(item => item.querySelector(".dropdown__currency").dataset.currency === buyCurrency);
+  buyCountry.innerHTML = buyItem.innerHTML;
+
+  //очистить инпуты
+  inputs.forEach(input => input.value = "");
+})
 
 /**
  * document event listeners
