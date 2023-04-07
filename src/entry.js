@@ -14,18 +14,16 @@ let buyCurrency = "USD";
  * fetching data
  */
 
-const rates = {};
+let rates = {};
 const sellLabel = document.querySelector("#sell-currency-label");
 const buyLabel = document.querySelector("#buy-currency-label");
-const sellHiddenInput = document.querySelector("#sell-hidden-input");
-const buyHiddenInput = document.querySelector("#buy-hidden-input");
 
 // Рассчитать и вывести в интерфейс курсы валют
 
 let ratio, reverseRatio;
 
 const setLabelContent = async () => {
-  let rates = await getData();
+  rates = await getData();
   const composeLabelText = (ratio) => {
     reverseRatio = 1 / ratio;
     console.log(ratio, reverseRatio);
@@ -37,20 +35,13 @@ const setLabelContent = async () => {
   if (sellCurrency !== "RUB" && buyCurrency !== "RUB") {
     ratio = rates[sellCurrency] / rates[buyCurrency];
     composeLabelText(ratio);
-  } else {
-    // покупка рубля за любую валюту
-    if (buyCurrency === "RUB") {
-      if (sellCurrency === buyCurrency) {
-        composeLabelText(1);
-      } else {
-        ratio = 1 / rates[sellCurrency];
-        composeLabelText(ratio);
-      }
-    } else if (sellCurrency === "RUB" && buyCurrency !== "RUB") {
-      // покупка любой валюты за рубль
-      ratio = 1 / rates[buyCurrency];
-      composeLabelText(ratio);
-    }
+  } else if (buyCurrency === "RUB") {
+    ratio = rates[sellCurrency];
+    composeLabelText(ratio);
+  } else if (sellCurrency === "RUB" && buyCurrency !== "RUB") {
+    // покупка любой валюты за рубль
+    ratio = 1 / rates[buyCurrency];
+    composeLabelText(ratio);
   }
 }
 setLabelContent();
