@@ -1,60 +1,11 @@
-import converter from "./pages/converter.html";
-import ratioPage from "./pages/ratio.html";
-import notFound from "./pages/404.html";
 import styles from "./styles/index.scss";
 import image from "./images/cat.png";
-
-// var myHeaders = new Headers();
-// myHeaders.append("apikey", "xXPtOAgX9pvC2AB4ZBKZvsBkVhAS1s5Z");
-
-// var requestOptions = {
-//   method: "GET",
-//   redirect: "follow",
-//   headers: myHeaders,
-// };
-
-// var dataJSON = fetch(
-//   "https://api.apilayer.com/exchangerates_data/symbols",
-//   requestOptions
-// )
-//   .then((response) => response.text())
-//   .then((result) => console.log(result))
-//   .catch((error) => console.log("error", error));
-// // const APIKey = "xXPtOAgX9pvC2AB4ZBKZvsBkVhAS1s5Z";
-// fs.writeFile("file.json", dataJSON, function () {
-//   console.log("Error!");
-// });
-
-document.querySelector(".navbar__image img").src = image;
-
-const route = (event) => {
-  event = event || window.event;
-  event.preventDefault();
-  console.log(event.target.href);
-  window.history.pushState({}, "", event.target.href);
-  handleLocation();
-};
-
-const routes = {
-  "/": converter,
-  "/converter": converter,
-  "/ratio": ratioPage,
-  404: notFound,
-};
-
-const handleLocation = () => {
-  const path = window.location.pathname;
-  const route = routes[path] || routes[404];
-  document.querySelector("#root").innerHTML = route;
-  // } else {
-  //   document.querySelector("#root").innerHTML = notFound;
-  // }
-};
-
-window.onpopstate = handleLocation;
-window.route = route;
+import getData from "./data.js";
+import handleLocation from "./router.js";
 
 handleLocation();
+
+document.querySelector(".navbar__image img").src = image;
 
 let sellCurrency = "RUB";
 let buyCurrency = "USD";
@@ -64,29 +15,17 @@ let buyCurrency = "USD";
  */
 
 const rates = {};
-
 const sellLabel = document.querySelector("#sell-currency-label");
 const buyLabel = document.querySelector("#buy-currency-label");
 const sellHiddenInput = document.querySelector("#sell-hidden-input");
 const buyHiddenInput = document.querySelector("#buy-hidden-input");
 
-async function getCurrencies() {
-  const responce = await fetch("https://www.cbr-xml-daily.ru/daily_json.js")
-  const json = await responce.json();
-  rates.USD = json.Valute.USD.Value;
-  rates.EUR = json.Valute.EUR.Value;
-  rates.GBP = json.Valute.GBP.Value;
-  rates.JPY = json.Valute.JPY.Value;
-  setLabelContent();
-}
-getCurrencies();
-
 // Рассчитать и вывести в интерфейс курсы валют
 
 let ratio, reverseRatio;
 
-const setLabelContent = () => {
-
+const setLabelContent = async () => {
+  let rates = await getData();
   const composeLabelText = (ratio) => {
     reverseRatio = 1 / ratio;
     console.log(ratio, reverseRatio);
@@ -114,7 +53,7 @@ const setLabelContent = () => {
     }
   }
 }
-
+setLabelContent();
 /**
  * input event listeners
  */

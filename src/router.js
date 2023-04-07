@@ -1,22 +1,30 @@
-// let locationResolver = (location) => {
-//   console.log(location);
-// };
+import converter from "./pages/converter.html";
+import ratioPage from "./pages/ratio.html";
+import notFound from "./pages/404.html";
 
-let route = (event) => {
-  event.preventDefault();
-  console.log(event.target);
+const routes = {
+  "/": converter,
+  "/converter": converter,
+  "/ratio": ratioPage,
+  404: notFound,
 };
 
-export default route;
 
-// function getRouteInfo() {
-//   let hash = location.hash;
-//   console.log(hash);
-// }
+const handleLocation = () => {
+  const path = window.location.pathname;
+  const route = routes[path] || routes[404];
+  document.querySelector("#root").innerHTML = route;
+};
 
-// export default {
-//   init() {
-//     window.addEventListener("hashchange", getRouteInfo);
-//     getRouteInfo();
-//   },
-// };
+const route = (event) => {
+  event = event || window.event;
+  event.preventDefault();
+  console.log(event.target.href);
+  window.history.pushState({}, "", event.target.href);
+  handleLocation();
+};
+window.onpopstate = handleLocation;
+window.route = route;
+
+export default handleLocation;
+// handleLocation();
