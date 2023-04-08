@@ -22,29 +22,26 @@ const buyLabel = document.querySelector("#buy-currency-label");
 
 let ratio, reverseRatio;
 
-const setLabelContent = async () => {
-  rates = await getData();
-  const composeLabelText = (ratio) => {
-    reverseRatio = 1 / ratio;
-    console.log(ratio, reverseRatio);
-    sellLabel.textContent = `1 ${sellCurrency} = ${ratio.toFixed(4)} ${buyCurrency}`;
-    buyLabel.textContent = `1 ${buyCurrency} = ${reverseRatio.toFixed(4)} ${sellCurrency}`;
-  }
+const composeLabelText = (ratio) => {
+  reverseRatio = 1 / ratio;
+  sellLabel.textContent = `1 ${sellCurrency} = ${ratio.toFixed(4)} ${buyCurrency}`;
+  buyLabel.textContent = `1 ${buyCurrency} = ${reverseRatio.toFixed(4)} ${sellCurrency}`;
+}
 
-  // пары валют без рубля
+const calculateRates = async () => {
+  rates = await getData();
+
   if (sellCurrency !== "RUB" && buyCurrency !== "RUB") {
     ratio = rates[sellCurrency] / rates[buyCurrency];
-    composeLabelText(ratio);
   } else if (buyCurrency === "RUB") {
     ratio = rates[sellCurrency];
-    composeLabelText(ratio);
   } else if (sellCurrency === "RUB" && buyCurrency !== "RUB") {
-    // покупка любой валюты за рубль
     ratio = 1 / rates[buyCurrency];
-    composeLabelText(ratio);
   }
+  composeLabelText(ratio);
 }
-setLabelContent();
+calculateRates();
+
 /**
  * input event listeners
  */
@@ -133,7 +130,7 @@ setInactiveItems();
     } else {
       buyCurrency = this.querySelector(".dropdown__currency").dataset.currency;
     }  
-    setLabelContent();
+    calculateRates();
     setInactiveItems(true);
 
     // очистить инпуты
@@ -147,7 +144,7 @@ setInactiveItems();
 
 document.querySelector(".reverse").addEventListener("click", function(){
   [sellCurrency, buyCurrency] = [buyCurrency, sellCurrency];
-  setLabelContent();
+  calculateRates();
   let sellCard = document.querySelector("#sell-card");
   let buyCard = document.querySelector("#buy-card");
   let sellCountry = sellCard.querySelector(".dropdown__country");

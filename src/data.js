@@ -1,8 +1,8 @@
-import { CURRENCIES_LIST, CurrenciesRatesUrl } from "./constants.js";
+import { CURRENCIES_LIST, CURRENCIES_RATES_URL } from "./constants.js";
 
 // Загрузить курсы валют
 async function fetchCurrencies() {
-  const responce = await fetch(CurrenciesRatesUrl);
+  const responce = await fetch(CURRENCIES_RATES_URL);
   const json = await responce.json();
   return json.Valute;
 }
