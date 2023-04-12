@@ -2,21 +2,39 @@ import styles from "./styles/index.scss";
 import image from "./images/cat.png";
 import getData from "./data.js";
 import handleLocation from "./router.js";
-
-handleLocation();
+import card from "./components/Card.html";
 
 document.querySelector(".navbar__image img").src = image;
 
+handleLocation();
+
+/**
+ * initial layout
+ */
+
 let sellCurrency = "RUB";
 let buyCurrency = "USD";
+
+// положить компонент Card в две обертки
+const sellCard = document.querySelector("#sell-card");
+sellCard.innerHTML = card;
+const buyCard = document.querySelector("#buy-card");
+buyCard.innerHTML = card;
+
+// положить в дропдауны items, соответствующие исходным валютам для конвертации
+let buyCountry = buyCard.querySelector(`[data-currency=${buyCurrency}]`);
+let buyItem = buyCountry.closest(".dropdown__item");
+buyCard.querySelector(".dropdown__country").innerHTML = buyItem.innerHTML;
 
 /**
  * fetching data
  */
 
 let rates = {};
-const sellLabel = document.querySelector("#sell-currency-label");
-const buyLabel = document.querySelector("#buy-currency-label");
+// const sellLabel = document.querySelector("#sell-currency-label");
+const sellLabel = sellCard.querySelector(".currency__label");
+// const buyLabel = document.querySelector("#buy-currency-label");
+const buyLabel = buyCard.querySelector(".currency__label");
 
 // Рассчитать и вывести в интерфейс курсы валют
 
@@ -67,7 +85,6 @@ inputs.forEach((input, index) => {
 
 const dropdownContents = document.querySelectorAll(".dropdown__content");
 const currentBtn = document.querySelector(".dropdown__button");
-const cardInputs = document.querySelectorAll(".currency__input");
 const dropDownBts = document.querySelectorAll(".dropdown__button");
 let arrows = document.querySelectorAll(".arrow");
 
@@ -145,8 +162,8 @@ setInactiveItems();
 document.querySelector(".reverse").addEventListener("click", function(){
   [sellCurrency, buyCurrency] = [buyCurrency, sellCurrency];
   calculateRates();
-  let sellCard = document.querySelector("#sell-card");
-  let buyCard = document.querySelector("#buy-card");
+  // let sellCard = document.querySelector("#sell-card");
+  // let buyCard = document.querySelector("#buy-card");
   let sellCountry = sellCard.querySelector(".dropdown__country");
   let sellItem = sellItems.find(item => item.querySelector(".dropdown__currency").dataset.currency === sellCurrency);
   sellCountry.innerHTML = sellItem.innerHTML;
