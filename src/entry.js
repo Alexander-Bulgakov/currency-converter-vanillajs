@@ -1,8 +1,8 @@
 import styles from "./styles/index.scss";
 import image from "./images/cat.png";
-import getData from "./data.js";
 import handleLocation from "./router.js";
 import card from "./components/Card.html";
+import { calculateRates } from "./helpers";
 
 document.querySelector(".navbar__image img").src = image;
 
@@ -22,43 +22,35 @@ const buyCard = document.querySelector("#buy-card");
 buyCard.innerHTML = card;
 
 // положить в дропдауны items, соответствующие исходным валютам для конвертации
-let buyCountry = buyCard.querySelector(`[data-currency=${buyCurrency}]`);
-let buyItem = buyCountry.closest(".dropdown__item");
+let buyItem = buyCard.querySelector(`[data-currency=${buyCurrency}]`).closest(".dropdown__item");
 buyCard.querySelector(".dropdown__country").innerHTML = buyItem.innerHTML;
+
+let sellItem = sellCard.querySelector(`[data-currency=${sellCurrency}]`).closest(".dropdown__item");
+sellCard.querySelector(".dropdown__country").innerHTML = sellItem.innerHTML;
 
 /**
  * fetching data
  */
 
-let rates = {};
-// const sellLabel = document.querySelector("#sell-currency-label");
 const sellLabel = sellCard.querySelector(".currency__label");
-// const buyLabel = document.querySelector("#buy-currency-label");
 const buyLabel = buyCard.querySelector(".currency__label");
 
 // Рассчитать и вывести в интерфейс курсы валют
 
 let ratio, reverseRatio;
 
-const composeLabelText = (ratio) => {
+const calcRates = async () => {
+  ratio = await calculateRates(sellCurrency, buyCurrency);
   reverseRatio = 1 / ratio;
+}
+
+const composeLabelText = async () => {
+  await calcRates();
   sellLabel.textContent = `1 ${sellCurrency} = ${ratio.toFixed(4)} ${buyCurrency}`;
   buyLabel.textContent = `1 ${buyCurrency} = ${reverseRatio.toFixed(4)} ${sellCurrency}`;
 }
 
-const calculateRates = async () => {
-  rates = await getData();
-
-  if (sellCurrency !== "RUB" && buyCurrency !== "RUB") {
-    ratio = rates[sellCurrency] / rates[buyCurrency];
-  } else if (buyCurrency === "RUB") {
-    ratio = rates[sellCurrency];
-  } else if (sellCurrency === "RUB" && buyCurrency !== "RUB") {
-    ratio = 1 / rates[buyCurrency];
-  }
-  composeLabelText(ratio);
-}
-calculateRates();
+composeLabelText();
 
 /**
  * input event listeners
@@ -147,7 +139,9 @@ setInactiveItems();
     } else {
       buyCurrency = this.querySelector(".dropdown__currency").dataset.currency;
     }  
-    calculateRates();
+    // calculateRates();
+    composeLabelText();
+    // calcRates();
     setInactiveItems(true);
 
     // очистить инпуты
@@ -161,9 +155,7 @@ setInactiveItems();
 
 document.querySelector(".reverse").addEventListener("click", function(){
   [sellCurrency, buyCurrency] = [buyCurrency, sellCurrency];
-  calculateRates();
-  // let sellCard = document.querySelector("#sell-card");
-  // let buyCard = document.querySelector("#buy-card");
+  composeLabelText();
   let sellCountry = sellCard.querySelector(".dropdown__country");
   let sellItem = sellItems.find(item => item.querySelector(".dropdown__currency").dataset.currency === sellCurrency);
   sellCountry.innerHTML = sellItem.innerHTML;
