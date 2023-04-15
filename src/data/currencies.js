@@ -1,23 +1,31 @@
 class Currencies {
 
+    #sellCurrency;
+    #buyCurrency;
     constructor(currencies) {
-      this.currencies = currencies;
+      this.#sellCurrency = currencies.sellCurrency;
+      this.#buyCurrency = currencies.buyCurrency;
+    //   this.setSellCurrency = this.setSellCurrency.bind(this);
     }
   
     get sellCurrency() {
-      return this.currencies.sellCurrency;
+      return this.#sellCurrency;
     }
 
     set sellCurrency(currency) {
-        this.sellCurrency = currency;
+        this.#sellCurrency = currency;
     }
 
     get buyCurrency() {
-        return this.currencies.buyCurrency;
+        return this.#buyCurrency;
     }
 
     set buyCurrency(currency) {
-        this.currencies.buyCurrency = currency;
+        this.#buyCurrency = currency;
+    }
+
+    reverseCurrencies() {
+        [this.#buyCurrency, this.#sellCurrency] = [this.#sellCurrency, this.#buyCurrency];
     }
   }
   

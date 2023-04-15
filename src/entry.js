@@ -9,14 +9,9 @@ document.querySelector(".navbar__image img").src = image;
 
 handleLocation();
 
-console.log(currencies.sellCurrency);
-console.log(currencies.buyCurrency);
 /**
  * initial layout
  */
-
-let sellCurrency = "RUB";
-let buyCurrency = "USD";
 
 const sellCard = document.querySelector("#sell-card");
 const buyCard = document.querySelector("#buy-card");
@@ -29,10 +24,10 @@ const setCardsToWrappers = () => {
 setCardsToWrappers();
 
 // положить в дропдауны items, соответствующие исходным валютам для конвертации
-let buyItem = buyCard.querySelector(`[data-currency=${buyCurrency}]`).closest(".dropdown__item");
+let buyItem = buyCard.querySelector(`[data-currency=${currencies.buyCurrency}]`).closest(".dropdown__item");
 buyCard.querySelector(".dropdown__country").innerHTML = buyItem.innerHTML;
 
-let sellItem = sellCard.querySelector(`[data-currency=${sellCurrency}]`).closest(".dropdown__item");
+let sellItem = sellCard.querySelector(`[data-currency=${currencies.sellCurrency}]`).closest(".dropdown__item");
 sellCard.querySelector(".dropdown__country").innerHTML = sellItem.innerHTML;
 
 /**
@@ -47,14 +42,14 @@ const buyLabel = buyCard.querySelector(".currency__label");
 let ratio, reverseRatio;
 
 const calcRates = async () => {
-  ratio = await calculateRates(sellCurrency, buyCurrency);
+  ratio = await calculateRates(currencies.sellCurrency, currencies.buyCurrency);
   reverseRatio = 1 / ratio;
 }
 
 const composeLabelText = async () => {
   await calcRates();
-  sellLabel.textContent = `1 ${sellCurrency} = ${ratio.toFixed(4)} ${buyCurrency}`;
-  buyLabel.textContent = `1 ${buyCurrency} = ${reverseRatio.toFixed(4)} ${sellCurrency}`;
+  sellLabel.textContent = `1 ${currencies.sellCurrency} = ${ratio.toFixed(4)} ${currencies.buyCurrency}`;
+  buyLabel.textContent = `1 ${currencies.buyCurrency} = ${reverseRatio.toFixed(4)} ${currencies.sellCurrency}`;
 }
 
 composeLabelText();
@@ -118,10 +113,10 @@ const setInactiveItems = (itemsChanges = false) => {
   }
 
   inactiveItems.sellItem = sellItems.find(item => {
-    return item.querySelector(".dropdown__currency").dataset.currency === buyCurrency;
+    return item.querySelector(".dropdown__currency").dataset.currency === currencies.buyCurrency;
   });
   inactiveItems.buyItem  = buyItems.find(item => {
-    return item.querySelector(".dropdown__currency").dataset.currency === sellCurrency;
+    return item.querySelector(".dropdown__currency").dataset.currency === currencies.sellCurrency;
   });
 
   inactiveItems.sellItem.classList.add("inactive-item");
@@ -141,9 +136,9 @@ setInactiveItems();
     
     // изменить валюты покупки и продажи
     if (dropDown.closest("#sell-card")) {
-      sellCurrency = this.querySelector(".dropdown__currency").dataset.currency;
+      currencies.sellCurrency = this.querySelector(".dropdown__currency").dataset.currency;
     } else {
-      buyCurrency = this.querySelector(".dropdown__currency").dataset.currency;
+      currencies.buyCurrency = this.querySelector(".dropdown__currency").dataset.currency;
     }  
     composeLabelText();
     setInactiveItems(true);
@@ -157,14 +152,14 @@ setInactiveItems();
  * reverse currencies
  */
 
-document.querySelector(".reverse").addEventListener("click", function(){
-  [sellCurrency, buyCurrency] = [buyCurrency, sellCurrency];
+document.querySelector(".reverse").addEventListener("click", function() {
+  currencies.reverseCurrencies();
   composeLabelText();
   let sellCountry = sellCard.querySelector(".dropdown__country");
-  let sellItem = sellItems.find(item => item.querySelector(".dropdown__currency").dataset.currency === sellCurrency);
+  let sellItem = sellItems.find(item => item.querySelector(".dropdown__currency").dataset.currency === currencies.sellCurrency);
   sellCountry.innerHTML = sellItem.innerHTML;
   let buyCountry = buyCard.querySelector(".dropdown__country");
-  let buyItem = buyItems.find(item => item.querySelector(".dropdown__currency").dataset.currency === buyCurrency);
+  let buyItem = buyItems.find(item => item.querySelector(".dropdown__currency").dataset.currency === currencies.buyCurrency);
   buyCountry.innerHTML = buyItem.innerHTML;
 
   //очистить инпуты
