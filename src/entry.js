@@ -2,7 +2,7 @@ import styles from "./styles/index.scss";
 import image from "./images/cat.png";
 import handleLocation from "./router.js";
 import card from "./components/Card.html";
-import { calculateRates } from "./helpers";
+import { calculateRates, rotateArrow } from "./helpers";
 
 document.querySelector(".navbar__image img").src = image;
 
@@ -80,14 +80,6 @@ const currentBtn = document.querySelector(".dropdown__button");
 const dropDownBts = document.querySelectorAll(".dropdown__button");
 let arrows = document.querySelectorAll(".arrow");
 
-const rotateArrow = (arrow, outerClick = false) => {
-  if (outerClick) {
-    arrow.classList.remove("arrow-up");
-  } else {
-    arrow.classList.toggle("arrow-up");
-  }
-}
-
 // Клик по дропдауну, раскрыть/закрыть список, развернуть стрелку
 [...dropDownBts].forEach(item => {
   item.addEventListener("click", function() {
@@ -138,8 +130,7 @@ setInactiveItems();
     dropdownContents.forEach( item => {
       item.classList.remove("dropdown__content_active");
     });  
-    const arrow = dropDown.querySelector(".arrow");
-    rotateArrow(arrow);
+    [...arrows].forEach(arrow => rotateArrow(arrow, true))
     
     // изменить валюты покупки и продажи
     if (dropDown.closest("#sell-card")) {
@@ -182,7 +173,6 @@ document.addEventListener("click", (event) => {
   if (!event.target.closest(".dropdown")) {
     [...arrows].forEach(arrow => {
       rotateArrow(arrow, true);
-      // arrow.classList.remove("arrow-up");
       document.querySelectorAll(".dropdown").forEach(item => {
         item.querySelector(".dropdown__content").classList.remove("dropdown__content_active");
       });
