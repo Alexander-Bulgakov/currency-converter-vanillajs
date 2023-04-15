@@ -80,11 +80,19 @@ const currentBtn = document.querySelector(".dropdown__button");
 const dropDownBts = document.querySelectorAll(".dropdown__button");
 let arrows = document.querySelectorAll(".arrow");
 
+const rotateArrow = (arrow, outerClick = false) => {
+  if (outerClick) {
+    arrow.classList.remove("arrow-up");
+  } else {
+    arrow.classList.toggle("arrow-up");
+  }
+}
+
 // Клик по дропдауну, раскрыть/закрыть список, развернуть стрелку
 [...dropDownBts].forEach(item => {
   item.addEventListener("click", function() {
     const arrow = this.querySelector(".arrow");
-    arrow.classList.toggle("arrow-up");
+    rotateArrow(arrow);
     const dropDownContent = this.closest(".dropdown").querySelector(".dropdown__content");
     dropDownContent.classList.toggle("dropdown__content_active");
   })
@@ -131,7 +139,7 @@ setInactiveItems();
       item.classList.remove("dropdown__content_active");
     });  
     const arrow = dropDown.querySelector(".arrow");
-    arrow.classList.toggle("arrow-up");
+    rotateArrow(arrow);
     
     // изменить валюты покупки и продажи
     if (dropDown.closest("#sell-card")) {
@@ -139,9 +147,7 @@ setInactiveItems();
     } else {
       buyCurrency = this.querySelector(".dropdown__currency").dataset.currency;
     }  
-    // calculateRates();
     composeLabelText();
-    // calcRates();
     setInactiveItems(true);
 
     // очистить инпуты
@@ -175,7 +181,8 @@ document.querySelector(".reverse").addEventListener("click", function(){
 document.addEventListener("click", (event) => {
   if (!event.target.closest(".dropdown")) {
     [...arrows].forEach(arrow => {
-      arrow.classList.remove("arrow-up");
+      rotateArrow(arrow, true);
+      // arrow.classList.remove("arrow-up");
       document.querySelectorAll(".dropdown").forEach(item => {
         item.querySelector(".dropdown__content").classList.remove("dropdown__content_active");
       });
@@ -187,8 +194,8 @@ document.addEventListener("click", (event) => {
 document.addEventListener("keydown", (event) => {
   if (event.key === "Tab" || event.key === "Escape") {
     let arrows = document.querySelectorAll(".arrow");
-    [...arrows].forEach(element => {
-      element.classList.remove("arrow-up");
+    [...arrows].forEach(arrow => {
+      rotateArrow(arrow, true);
       document.querySelectorAll(".dropdown").forEach(item => {
         item.querySelector(".dropdown__content").classList.remove("dropdown__content_active");
       });
