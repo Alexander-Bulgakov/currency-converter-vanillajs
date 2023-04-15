@@ -1,4 +1,4 @@
-import getData from "./data";
+import { getData } from "./data/fetchData";
 
 const calculateRates = async (sellCurrency, buyCurrency) => {
     let rates = await getData();

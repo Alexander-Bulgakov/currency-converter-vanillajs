@@ -1,4 +1,4 @@
-import { CURRENCIES_LIST, CURRENCIES_RATES_URL } from "./constants.js";
+import { CURRENCIES_LIST, CURRENCIES_RATES_URL } from "../constants.js";
 
 // Загрузить курсы валют
 async function fetchCurrencies() {
@@ -15,4 +15,4 @@ async function getData() {
   return rates;
 }
 
-export default getData;
+export { getData };

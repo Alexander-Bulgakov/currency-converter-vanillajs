@@ -3,11 +3,14 @@ import image from "./images/cat.png";
 import handleLocation from "./router.js";
 import card from "./components/Card.html";
 import { calculateRates, rotateArrow } from "./helpers";
+import { currencies } from "./data/currencies";
 
 document.querySelector(".navbar__image img").src = image;
 
 handleLocation();
 
+console.log(currencies.sellCurrency);
+console.log(currencies.buyCurrency);
 /**
  * initial layout
  */
