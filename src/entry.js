@@ -15,11 +15,15 @@ handleLocation();
 let sellCurrency = "RUB";
 let buyCurrency = "USD";
 
-// положить компонент Card в две обертки
 const sellCard = document.querySelector("#sell-card");
-sellCard.innerHTML = card;
 const buyCard = document.querySelector("#buy-card");
-buyCard.innerHTML = card;
+
+// положить компонент Card в две обертки
+const setCardsToWrappers = () => {
+  sellCard.innerHTML = card;
+  buyCard.innerHTML = card;
+}
+setCardsToWrappers();
 
 // положить в дропдауны items, соответствующие исходным валютам для конвертации
 let buyItem = buyCard.querySelector(`[data-currency=${buyCurrency}]`).closest(".dropdown__item");
