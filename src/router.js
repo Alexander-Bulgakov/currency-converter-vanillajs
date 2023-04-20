@@ -1,19 +1,23 @@
-import converter from "./pages/converter.html";
-import ratioPage from "./pages/ratio.html";
-import notFound from "./pages/404.html";
+// // import converter from "./pages/converter.html";
+// import ratioPage from "./pages/ratio.html";
+// import notFound from "./pages/404.html";
+import { Converter } from "./pages/converter";
+import { RatioPage } from "./pages/ratio";
+import { NotFoundPage } from "./pages/notFound";
 
 const routes = {
-  "/": converter,
-  "/converter": converter,
-  "/ratio": ratioPage,
-  404: notFound,
+  "/": Converter,
+  "/converter": Converter,
+  "/ratio": RatioPage,
+  404: NotFoundPage,
 };
 
 
 const handleLocation = () => {
   const path = window.location.pathname;
   const route = routes[path] || routes[404];
-  document.querySelector("#root").innerHTML = route;
+  route();
+  // document.querySelector("#root").innerHTML = route;
 };
 
 const route = (event) => {
