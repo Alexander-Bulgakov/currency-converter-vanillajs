@@ -5,7 +5,6 @@ class Currencies {
     constructor(currencies) {
       this.#sellCurrency = currencies.sellCurrency;
       this.#buyCurrency = currencies.buyCurrency;
-    //   this.setSellCurrency = this.setSellCurrency.bind(this);
     }
   
     get sellCurrency() {

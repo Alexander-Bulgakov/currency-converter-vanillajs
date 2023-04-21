@@ -7,12 +7,12 @@ async function fetchCurrencies() {
   return json.Valute;
 }
 
-// Вернуть объект с нужными курсами для вывода их в интерфейс
-async function getData() {
+// Вернуть объект только с нужными курсами
+async function getRates() {
   const rates = {};
   let currencies = await fetchCurrencies();
   CURRENCIES_LIST.forEach(item => rates[item] = currencies[item]?.Value);
   return rates;
 }
 
-export { getData };
+export { getRates };

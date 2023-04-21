@@ -1,7 +1,8 @@
 import card from "../components/Card.html";
 import converter from "./converter.html";
 import { currencies } from "../data/currencies";
-import { calculateRates, rotateArrow } from "../helpers";
+import { rotateArrow } from "../helpers";
+import { getRatio, getReverseRatio, calculateRates } from "../data/rates";
 
 function Converter() {
 
@@ -12,13 +13,16 @@ function Converter() {
   document.querySelector("#root").innerHTML = converter;
   const sellCard = document.querySelector("#sell-card");
   const buyCard = document.querySelector("#buy-card");
-
+  
   // положить компонент Card в две обертки
   const setCardsToWrappers = () => {
     sellCard.innerHTML = card;
     buyCard.innerHTML = card;
   }
+  
   setCardsToWrappers();
+  
+  buyCard.querySelector(".card-header").textContent = "Хочу купить";
 
   // положить в дропдауны items, соответствующие исходным валютам для конвертации
   let buyItem = buyCard.querySelector(`[data-currency=${currencies.buyCurrency}]`).closest(".dropdown__item");
@@ -27,26 +31,14 @@ function Converter() {
   let sellItem = sellCard.querySelector(`[data-currency=${currencies.sellCurrency}]`).closest(".dropdown__item");
   sellCard.querySelector(".dropdown__country").innerHTML = sellItem.innerHTML;
 
-  /**
-   * fetching data
-   */
-
+  // заполнить input label
   const sellLabel = sellCard.querySelector(".currency__label");
   const buyLabel = buyCard.querySelector(".currency__label");
 
-  // Рассчитать и вывести в интерфейс курсы валют
-
-  let ratio, reverseRatio;
-
-  const calcRates = async () => {
-    ratio = await calculateRates(currencies.sellCurrency, currencies.buyCurrency);
-    reverseRatio = 1 / ratio;
-  }
-
   const composeLabelText = async () => {
-    await calcRates();
-    sellLabel.textContent = `1 ${currencies.sellCurrency} = ${ratio.toFixed(4)} ${currencies.buyCurrency}`;
-    buyLabel.textContent = `1 ${currencies.buyCurrency} = ${reverseRatio.toFixed(4)} ${currencies.sellCurrency}`;
+    await calculateRates(currencies.sellCurrency, currencies.buyCurrency);
+    sellLabel.textContent = `1 ${currencies.sellCurrency} = ${getRatio().toFixed(4)} ${currencies.buyCurrency}`;
+    buyLabel.textContent = `1 ${currencies.buyCurrency} = ${getReverseRatio().toFixed(4)} ${currencies.sellCurrency}`;
   }
 
   composeLabelText();
@@ -63,9 +55,9 @@ function Converter() {
       const reg = /[0-9]/g;
       this.value = (reg.test(event.data)) ? this.value : this.value.slice(0, -1);
       if (index === 0) {
-        inputs[1].value = (this.value) ? (this.value * ratio).toFixed(2) : "";
+        inputs[1].value = (this.value) ? (this.value * getRatio()).toFixed(2) : "";
       } else {
-        inputs[0].value = (this.value) ? (this.value * reverseRatio).toFixed(2) : "";
+        inputs[0].value = (this.value) ? (this.value * getReverseRatio()).toFixed(2) : "";
       }
     });
   });
@@ -139,6 +131,8 @@ function Converter() {
       }
       composeLabelText();
       setInactiveItems(true);
+      calculateRates(currencies.sellCurrency, currencies.buyCurrency);
+      // calcRates();
 
       // очистить инпуты
       inputs.forEach(input => input.value = "");
@@ -162,42 +156,42 @@ function Converter() {
     //очистить инпуты
     inputs.forEach(input => input.value = "");
     setInactiveItems(true);
+    calculateRates(currencies.sellCurrency, currencies.buyCurrency);
+    // calcRates();
   })
-  
-/**
- * document event listeners
- */
 
-// Клик снаружи дропдауна. Закрыть дропдаун, перевернуть стрелку
-document.addEventListener("click", (event) => {
-  if (!event.target.closest(".dropdown")) {
-    [...arrows].forEach(arrow => {
-      rotateArrow(arrow, true);
-      document.querySelectorAll(".dropdown").forEach(item => {
-        item.querySelector(".dropdown__content").classList.remove("dropdown__content_active");
+  /**
+   * document event listeners
+   */
+
+  // Клик снаружи дропдауна. Закрыть дропдаун, перевернуть стрелку
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".dropdown")) {
+      [...arrows].forEach(arrow => {
+        rotateArrow(arrow, true);
+        document.querySelectorAll(".dropdown").forEach(item => {
+          item.querySelector(".dropdown__content").classList.remove("dropdown__content_active");
+        });
+      })
+    }
+  });
+
+  // Нажатие на Tab или Escape. Закрыть дропдаун, перевернуть стрелку
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Tab" || event.key === "Escape") {
+      let arrows = document.querySelectorAll(".arrow");
+      [...arrows].forEach(arrow => {
+        rotateArrow(arrow, true);
+        document.querySelectorAll(".dropdown").forEach(item => {
+          item.querySelector(".dropdown__content").classList.remove("dropdown__content_active");
+        });
       });
-    })
-  }
-});
-
-
-// Нажатие на Tab или Escape. Закрыть дропдаун, перевернуть стрелку
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Tab" || event.key === "Escape") {
-    let arrows = document.querySelectorAll(".arrow");
-    [...arrows].forEach(arrow => {
-      rotateArrow(arrow, true);
-      document.querySelectorAll(".dropdown").forEach(item => {
-        item.querySelector(".dropdown__content").classList.remove("dropdown__content_active");
-      });
-    });
-    dropdownContents.forEach(item => {
-      item.classList.remove("dropdown__content_active");
-    })
-    currentBtn.classList.remove("button-active");
-  }
-});
-
+      dropdownContents.forEach(item => {
+        item.classList.remove("dropdown__content_active");
+      })
+      currentBtn.classList.remove("button-active");
+    }
+  });
 }
 
 export { Converter };
