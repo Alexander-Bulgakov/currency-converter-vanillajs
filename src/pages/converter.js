@@ -3,6 +3,7 @@ import converter from "./converter.html";
 import { currencies } from "../data/currencies";
 import { rotateArrow } from "../helpers";
 import { getRatio, getReverseRatio, calculateRates } from "../data/rates";
+import { SELL_CARD_HEADER, BUY_CARD_HEADER } from "../constants";
 
 function Converter() {
 
@@ -14,15 +15,15 @@ function Converter() {
   const sellCard = document.querySelector("#sell-card");
   const buyCard = document.querySelector("#buy-card");
   
-  // положить компонент Card в две обертки
+  // положить компонент Card в две обертки, вставить текст хедэра
   const setCardsToWrappers = () => {
     sellCard.innerHTML = card;
+    sellCard.querySelector(".card-header").textContent = SELL_CARD_HEADER;
     buyCard.innerHTML = card;
+    buyCard.querySelector(".card-header").textContent = BUY_CARD_HEADER;
   }
   
   setCardsToWrappers();
-  
-  buyCard.querySelector(".card-header").textContent = "Хочу купить";
 
   // положить в дропдауны items, соответствующие исходным валютам для конвертации
   let buyItem = buyCard.querySelector(`[data-currency=${currencies.buyCurrency}]`).closest(".dropdown__item");
