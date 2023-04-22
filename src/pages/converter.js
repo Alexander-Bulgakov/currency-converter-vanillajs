@@ -24,6 +24,7 @@ function Converter() {
  const $ = {
    sellLabel: sellCard.querySelector(".currency__label"),
    buyLabel: buyCard.querySelector(".currency__label"),
+   dropDowns: [...document.querySelectorAll(".dropdown")],
    inputs: [...document.querySelectorAll(".currency__input")],
    dropDownBts: [...document.querySelectorAll(".dropdown__button")],
    arrows: [...document.querySelectorAll(".arrow")],
@@ -39,7 +40,7 @@ function Converter() {
    * input event listeners
    */
 
-  // Разрешаем вводить в инпут только цифры
+  // Разрешить вводить в инпут только цифры
   $.inputs.forEach((input, index) => {
     input.addEventListener("input", function (event) {
       const reg = /[0-9]/g;
@@ -148,7 +149,7 @@ function Converter() {
       $.arrows.forEach(arrow => {
         rotateArrow(arrow, true);
       });
-      document.querySelectorAll(".dropdown").forEach(item => {
+      $.dropDowns.forEach(item => {
         item.querySelector(".dropdown__content").classList.remove("dropdown__content_active");
       })
     }
@@ -157,10 +158,9 @@ function Converter() {
   // Нажатие на Tab или Escape. Закрыть дропдаун, перевернуть стрелку
   document.addEventListener("keydown", (event) => {
     if (event.key === "Tab" || event.key === "Escape") {
-      // let arrows = document.querySelectorAll(".arrow");
       $.arrows.forEach(arrow => {
         rotateArrow(arrow, true);
-        document.querySelectorAll(".dropdown").forEach(item => {
+        $.dropDowns.forEach(item => {
           item.querySelector(".dropdown__content").classList.remove("dropdown__content_active");
         });
       });
