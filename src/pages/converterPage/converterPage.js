@@ -1,14 +1,15 @@
-import card from "../components/Card.html";
-import converter from "./converter.html";
-import { currencies } from "../data/currencies";
-import { rotateArrow, composeLabelText } from "../helpers";
-import { getRatio, getReverseRatio, calculateRates } from "../data/rates";
-import { SELL_CARD_HEADER, BUY_CARD_HEADER } from "../constants";
-import { Card } from "../components/Card";
+// import card from "../components/Card.html";
+import styles from "./converterPage.scss";
+import converterHtml from "./converterPage.html";
+import { currencies } from "../../data/currencies";
+import { rotateArrow, composeLabelText } from "../../helpers";
+import { getRatio, getReverseRatio, calculateRates } from "../../data/rates";
+import { SELL_CARD_HEADER, BUY_CARD_HEADER } from "../../constants";
+import { Card } from "../../components/Card";
 
-function Converter() {
+function ConverterPage() {
   
-  document.querySelector("#root").innerHTML = converter;
+  document.querySelector("#root").innerHTML = converterHtml;
 
   /**
    * initial layout
@@ -171,4 +172,4 @@ function Converter() {
   });
 }
 
-export { Converter };
+export { ConverterPage };

@@ -1,13 +1,10 @@
-// // import converter from "./pages/converter.html";
-// import ratioPage from "./pages/ratio.html";
-// import notFound from "./pages/404.html";
-import { Converter } from "./pages/converter";
-import { RatioPage } from "./pages/ratio";
-import { NotFoundPage } from "./pages/notFound";
+import { ConverterPage } from "./pages/converterPage/converterPage";
+import { RatioPage } from "./pages/ratioPage/ratioPage";
+import { NotFoundPage } from "./pages/notFoundPage/notFoundPage";
 
 const routes = {
-  "/": Converter,
-  "/converter": Converter,
+  "/": ConverterPage,
+  "/converter": ConverterPage,
   "/ratio": RatioPage,
   404: NotFoundPage,
 };
@@ -31,4 +28,3 @@ window.onpopstate = handleLocation;
 window.route = route;
 
 export default handleLocation;
-// handleLocation();

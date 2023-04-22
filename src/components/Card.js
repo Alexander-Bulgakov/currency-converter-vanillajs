@@ -1,8 +1,4 @@
-import { currencies } from "../data/currencies";
-import { calculateRates } from "../data/rates";
-import { getRatio, getReverseRatio } from "../data/rates";
 import card from "./Card.html";
-import { composeLabelText } from "../helpers";
 
 function Card(wrapper, currency, ratioGetter, headerText) {
 

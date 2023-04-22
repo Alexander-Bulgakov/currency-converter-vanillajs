@@ -6,7 +6,7 @@ module.exports = {
   output: {
     filename: "entry.js",
     path: path.resolve(__dirname, "build"),
-    assetModuleFilename: "src/images/[name][ext]",
+    assetModuleFilename: "src/assets/images/[name][ext]",
     clean: true,
   },
   plugins: [
