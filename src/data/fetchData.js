@@ -15,7 +15,7 @@ async function fetchCurrencies() {
 async function getRates() {
   const rates = {};
   let currencies = await fetchCurrencies();
-  CURRENCIES_LIST.forEach(item => rates[item] = currencies[item]?.Value);
+  CURRENCIES_LIST.forEach((item) => (rates[item] = currencies[item]?.Value));
   return rates;
 }
 

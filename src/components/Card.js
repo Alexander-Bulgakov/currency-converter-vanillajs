@@ -2,28 +2,26 @@ import cardHtml from "./Card.html";
 import styles from "./Card.scss";
 
 function Card(wrapper, currency, ratioGetter, headerText) {
+  function setCardToWrapper() {
+    wrapper.innerHTML = cardHtml;
+  }
 
-    console.log("wrapper", wrapper, currency, ratioGetter);
-    
-    function setCardToWrapper () {
-        wrapper.innerHTML = cardHtml;
-    }
+  function setHeaderText() {
+    wrapper.querySelector(".card-header").textContent = headerText;
+  }
 
-    function setHeader() {
-        wrapper.querySelector(".card-header").textContent = headerText;
-    }
+  function setItemToDpdBtn() {
+    let item = wrapper
+      .querySelector(`[data-currency=${currency}]`)
+      .closest(".dropdown__item");
+    wrapper.querySelector(".dropdown__country").innerHTML = item.innerHTML;
+  }
 
-    function setItemToDpdBtn() {
-        let item = wrapper.querySelector(`[data-currency=${currency}]`).closest(".dropdown__item");
-        wrapper.querySelector(".dropdown__country").innerHTML = item.innerHTML;
-    }
+  setCardToWrapper();
 
-    setCardToWrapper();
+  setHeaderText();
 
-    setHeader();
-
-    setItemToDpdBtn();
-
+  setItemToDpdBtn();
 }
 
 export { Card };

@@ -8,12 +8,17 @@ const rotateArrow = (arrow, turnDown = false) => {
   } else {
     arrow.classList.toggle("arrow-up");
   }
-}
+};
 
-const composeLabelText = async (sellLabel, buyLabel) => {
-  await calculateRates(currencies.sellCurrency, currencies.buyCurrency);
-  sellLabel.textContent = `1 ${currencies.sellCurrency} = ${getRatio().toFixed(4)} ${currencies.buyCurrency}`;
-  buyLabel.textContent = `1 ${currencies.buyCurrency} = ${getReverseRatio().toFixed(4)} ${currencies.sellCurrency}`;
-}
+const composeLabelText = async () => {
+  const [sellCur, buyCur] = [currencies.sellCurrency, currencies.buyCurrency];
+  await calculateRates(sellCur, buyCur);
+  const _sellLabel = document.querySelector("#sell-card .currency__label");
+  const _buyLabel = document.querySelector("#buy-card .currency__label");
+  _sellLabel.textContent = `1 ${sellCur} = ${getRatio().toFixed(4)} ${buyCur}`;
+  _buyLabel.textContent = `1 ${buyCur} = ${getReverseRatio().toFixed(
+    4
+  )} ${sellCur}`;
+};
 
 export { rotateArrow, composeLabelText };

@@ -1,4 +1,3 @@
-
 .card {
   display: flex;
   flex-direction: column;
@@ -45,7 +44,7 @@
       transition: border-color 0.3s;
     }
     &:focus {
-      border: 1px solid #00aFFF;
+      border: 1px solid #00afff;
       border-radius: 12px;
       & ~ .currency__label {
         top: 5px;
@@ -101,12 +100,12 @@
 }
 
 .button-active {
-  border-color:  #00aFFF;
+  border-color: #00afff;
   border-radius: 12px;
 }
 
 .button-active:hover {
-  border-color:  #00aFFF;
+  border-color: #00afff;
   border-radius: 12px;
 }
 
