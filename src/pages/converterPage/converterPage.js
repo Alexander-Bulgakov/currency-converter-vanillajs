@@ -120,29 +120,27 @@ function ConverterPage() {
     })
   });
 
-  /**
-   * reverse currencies
-   */
-
-  document.querySelector(".reverse").addEventListener("click", function () {
-    currencies.reverseCurrencies();
-    composeLabelText($.sellLabel, $.buyLabel);
-    let sellCountry = sellCard.querySelector(".dropdown__country");
-    let sellItem = $.sellItems.find(item => item.querySelector(".dropdown__currency").dataset.currency === currencies.sellCurrency);
-    sellCountry.innerHTML = sellItem.innerHTML;
-    let buyCountry = buyCard.querySelector(".dropdown__country");
-    let buyItem = $.buyItems.find(item => item.querySelector(".dropdown__currency").dataset.currency === currencies.buyCurrency);
-    buyCountry.innerHTML = buyItem.innerHTML;
-
-    //очистить инпуты
-    $.inputs.forEach(input => input.value = "");
-    setInactiveItems(true);
-    calculateRates(currencies.sellCurrency, currencies.buyCurrency);
-  })
-
+  
   /**
    * document event listeners
-   */
+  */
+ 
+  // reverse currencies 
+ document.querySelector(".reverse").addEventListener("click", function () {
+   currencies.reverseCurrencies();
+   composeLabelText($.sellLabel, $.buyLabel);
+   let sellCountry = sellCard.querySelector(".dropdown__country");
+   let sellItem = $.sellItems.find(item => item.querySelector(".dropdown__currency").dataset.currency === currencies.sellCurrency);
+   sellCountry.innerHTML = sellItem.innerHTML;
+   let buyCountry = buyCard.querySelector(".dropdown__country");
+   let buyItem = $.buyItems.find(item => item.querySelector(".dropdown__currency").dataset.currency === currencies.buyCurrency);
+   buyCountry.innerHTML = buyItem.innerHTML;
+
+   //очистить инпуты
+   $.inputs.forEach(input => input.value = "");
+   setInactiveItems(true);
+   calculateRates(currencies.sellCurrency, currencies.buyCurrency);
+ })
 
   // Клик снаружи дропдауна. Закрыть дропдаун, перевернуть стрелку
   document.addEventListener("click", (event) => {

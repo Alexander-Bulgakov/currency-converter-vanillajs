@@ -1,11 +1,12 @@
-import card from "./Card.html";
+import cardHtml from "./Card.html";
+import styles from "./Card.scss";
 
 function Card(wrapper, currency, ratioGetter, headerText) {
 
     console.log("wrapper", wrapper, currency, ratioGetter);
     
     function setCardToWrapper () {
-        wrapper.innerHTML = card;
+        wrapper.innerHTML = cardHtml;
     }
 
     function setHeader() {
