@@ -1,7 +1,7 @@
 import cardHtml from "./Card.html";
 import styles from "./Card.scss";
 
-function Card(wrapper, currency, ratioGetter, headerText) {
+function Card(wrapper, currency, headerText) {
   function setCardToWrapper() {
     wrapper.innerHTML = cardHtml;
   }
